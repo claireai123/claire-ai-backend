@@ -49,11 +49,16 @@ function parseCRMData(payload) {
         client_email = properties['Contact_Name'].email;
     }
 
-    if (!firm_name || !agent_archetype) {
+    // Defaulting to "Gatekeeper" if missing to prevent crash
+    if (!agent_archetype) {
+        console.warn('Missing Agent_Archetype, defaulting to Gatekeeper');
+    }
+    const final_archetype = agent_archetype || 'Gatekeeper';
+
+    if (!firm_name) {
         // We log strict missing fields but maybe we can be looser if testing
         console.warn('Missing DNA fields. Payload keys:', Object.keys(properties));
         if (!firm_name) throw new Error('Missing required DNA field: firm_name (or Deal_Name)');
-        if (!agent_archetype) throw new Error('Missing required DNA field: agent_archetype');
     }
 
     return {
@@ -61,7 +66,8 @@ function parseCRMData(payload) {
         firm_name,
         practice_area,
         transfer_number,
-        agent_archetype,
+        transfer_number,
+        agent_archetype: final_archetype,
         client_email,
         amount: amount ? parseFloat(amount) : null
     };
