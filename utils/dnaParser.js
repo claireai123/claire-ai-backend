@@ -32,14 +32,17 @@ function parseCRMData(payload) {
     // We check for these specifically.
 
     const deal_id = getVal('id'); // Essential for write-back
-    
+
     // Zoho / Common mapping
     const firm_name = getVal('Deal_Name') || getVal('firm_name');
     const practice_area = getVal('Practice_Area') || getVal('practice_area');
     // For specific custom fields, we use the API names. Assuming 'Transfer_Number' and 'Agent_Archetype'
-    const transfer_number = getVal('Transfer_Number') || getVal('transfer_number'); 
+    const transfer_number = getVal('Transfer_Number') || getVal('transfer_number');
     const agent_archetype = getVal('Agent_Archetype') || getVal('agent_archetype');
-    
+
+    // Financials
+    const amount = getVal('Amount') || getVal('amount');
+
     // Email might be in a nested 'Contact_Name' object or top level
     let client_email = getVal('Email') || getVal('client_email');
     if (!client_email && properties['Contact_Name'] && properties['Contact_Name'].email) {
@@ -59,7 +62,8 @@ function parseCRMData(payload) {
         practice_area,
         transfer_number,
         agent_archetype,
-        client_email
+        client_email,
+        amount: amount ? parseFloat(amount) : null
     };
 }
 

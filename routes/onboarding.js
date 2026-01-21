@@ -21,8 +21,8 @@ async function processOnboarding(dna) {
         console.log('[Core] No Deal ID, skipping Zoho CRM update.');
     }
 
-    // 3. Billing (The Finance) - Setup Fee: $1,250
-    const setupFee = 1250;
+    // 3. Billing (The Finance) - Use Deal Amount or Default to Growth Plan
+    const setupFee = dna.amount || 1250;
     const invoice = await createInvoice(dna.firm_name, setupFee);
 
     // 3b. Stripe Payment Link
