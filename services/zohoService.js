@@ -109,40 +109,68 @@ async function uploadAttachment(filePath, token) {
 }
 
 /**
- * Sends the Setup Invoice to the client (via Zoho CRM Email API with attachment).
+ * Sends the Setup Invoice with Pixel-Perfect Design matching the screenshot.
  */
 async function sendInvoiceEmail(dealId, toEmail, invoice, attachmentPath, paymentUrl) {
     if (!dealId || !toEmail) return;
 
     console.log(`[Zoho CRM] Sending INVOICE to ${toEmail} (Deal ${dealId})...`);
-    if (attachmentPath) console.log(`[Zoho CRM] Attaching: ${attachmentPath}`);
+
+    // Design matching the screenshot
+    const HTML_TEMPLATE = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f6f9fc; margin: 0; padding: 40px; }
+            .container { background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+            .logo { height: 35px; margin-bottom: 30px; }
+            .title { color: #555; font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+            .invoice-num { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 5px; }
+            .client-name { color: #666; font-size: 14px; margin-bottom: 30px; }
+            .amount { font-size: 36px; font-weight: 800; color: #333; margin-bottom: 30px; letter-spacing: -0.5px; }
+            .btn-primary { background-color: #2563eb; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block; font-size: 16px; margin-bottom: 30px; }
+            .footer { color: #999; font-size: 12px; margin-top: 20px; }
+            .intro { text-align: left; color: #333; font-size: 16px; margin-bottom: 40px; line-height: 1.5; }
+        </style>
+    </head>
+    <body>
+        <div class="intro">
+            Hi there,<br><br>
+            Thank you for choosing ClaireAI! Please find your invoice details below.
+        </div>
+        <div class="container">
+            <img src="https://res.cloudinary.com/dwzsqumf6/image/upload/v1765854323/logo_transparent_ec9ge1.png" alt="ClaireAI" class="logo">
+            
+            <div class="title">Invoice from ClaireAI</div>
+            <div class="invoice-num">Invoice #${invoice.id}</div> 
+            <div class="amount">$${invoice.amount.toLocaleString()}.00</div>
+            
+            <a href="${paymentUrl}" class="btn-primary">Pay Invoice</a>
+            
+            <div class="footer">Due: Upon Receipt</div>
+        </div>
+    </body>
+    </html>
+    `;
 
     const token = await getZohoAccessToken();
     if (!token) {
-        console.log(`[SIMULATION] [Zoho] Invoice #${invoice.id} sent to ${toEmail}`);
+        console.log(`[SIMULATION] [Zoho] Invoice sent to ${toEmail}`);
         return { status: 'mock_success' };
     }
 
     try {
-        // Step 1: Upload the file to Zoho Files API
         const fileId = await uploadAttachment(attachmentPath, token);
-
         const url = `https://www.zohoapis.com/crm/v2/Deals/${dealId}/actions/send_mail`;
 
-        let content = `Hi there,<br><br>Please find your setup invoice attached.<br><br>Total: $${invoice.amount}<br><br>`;
-        if (paymentUrl) {
-            content += `<b>You can complete your payment securely here:</b><br><a href="${paymentUrl}">${paymentUrl}</a><br><br>`;
-        }
-        content += `Thanks,<br>ClaireAI Team`;
-
         const emailData = {
-            from: { user_name: 'ClaireAI', email: 'tiago@theclaireai.com' },
+            from: { user_name: 'ClaireAI Billing', email: 'tiago@theclaireai.com' },
             to: [{ email: toEmail }],
-            subject: `Invoice #${invoice.id} for ClaireAI Setup`,
-            content: content
+            subject: `Invoice from ClaireAI (#${invoice.id})`,
+            content: HTML_TEMPLATE
         };
 
-        // Add attachment ID if we have it
         if (fileId) {
             emailData.attachments = [{ id: fileId }];
         }
@@ -152,7 +180,7 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, attachmentPath, paymen
         const response = await axios.post(url, payload, {
             headers: { Authorization: `Zoho-oauthtoken ${token}` }
         });
-        console.log('[Zoho CRM] Invoice Email Sent:', response.data);
+        console.log('[Zoho CRM] Invoice Email Sent (Styled):', response.data);
         return response.data;
     } catch (error) {
         console.error('Zoho Email Error:', error.response ? error.response.data : error.message);
