@@ -34,7 +34,7 @@ async function provisionAgent(agentData) {
 
     console.log(`[CloneOps] Provisioning agent: ${JSON.stringify(payload, null, 2)}`);
 
-    if (!CLONEOPS_API_KEY || CLONEOPS_API_KEY === 'your_cloneops_key') {
+    if (!CLONEOPS_API_KEY || CLONEOPS_API_KEY === 'your_cloneops_key' || CLONEOPS_API_KEY.startsWith('mock_')) {
         console.warn('Skipping CloneOps API call: Missing or Placeholder CLONEOPS_API_KEY');
         return {
             status: 'mock_success',
