@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claire AI - Client Intake</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --bg: #f8fafc;
+            --text: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 24px;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 16px;
+        }
+
+        .description {
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            /* Important for padding */
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Onboarding Intake</h1>
+        <p class="description">Please provide the operational details required to configure your AI Agent. This ensures
+            we represent your firm accurately.</p>
+
+        <form id="intakeForm">
+            <!-- Hidden Firm Name (Auto-filled from URL) -->
+            <input type="hidden" id="firmName" name="firmName">
+
+            <div class="form-group">
+                <label for="email">Your Email (for notifications)</label>
+                <input type="email" id="email" name="email" placeholder="tiago@theclaireai.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="practiceDetails">Specific Practice Types</label>
+                <textarea id="practiceDetails" name="practiceDetails" rows="3"
+                    placeholder="e.g., Car Accidents, Slip & Fall, Medical Malpractice"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="staffList">Key Staff Members (Reception/Paralegals)</label>
+                <textarea id="staffList" name="staffList" rows="3"
+                    placeholder="Who should the AI reference?"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="hours">Business Hours & Holiday Logic</label>
+                <textarea id="hours" name="hours" rows="2"
+                    placeholder="e.g., M-F 9am-5pm EST. Closed on Federal Holidays."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="assetsUrl">Link to Case Files / Scripts (Dropbox/Drive)</label>
+                <input type="url" id="assetsUrl" name="assetsUrl" placeholder="https://dropbox.com/...">
+            </div>
+
+            <button type="submit">Complete Onboarding</button>
+        </form>
+    </div>
+
+    <script>
+        // Auto-fill Firm Name from URL ?firm=Name
+        const urlParams = new URLSearchParams(window.location.search);
+        const firm = urlParams.get('firm');
+        if (firm) {
+            document.getElementById('firmName').value = firm;
+            document.title = `Onboarding - ${firm}`;
+        }
+
+        // Handle Submission
+        document.getElementById('intakeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/api/onboarding/intake', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Thank you! Your details have been submitted.');
+                    window.location.href = 'https://theclaireai.com'; // Redirect to home
+                } else {
+                    alert('Error submitting form. Please try again.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Connection error.');
+            }
+        });
+    </script>
+</body>
+
+</html>

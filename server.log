@@ -1,0 +1,71 @@
+Server is running on port 3000
+--- New Onboarding Request ---
+Received Payload: {
+  "id": "7203613000000625007",
+  "Deal_Name": "Standard Onboarding (Solo) - Litowich",
+  "Practice_Area": "Family Law",
+  "Transfer_Number": "+15550199",
+  "Agent_Archetype": "Gatekeeper",
+  "client_email": "tiago@theclaireai.com",
+  "Contact_Name": {
+    "name": "Sarah Litowich",
+    "id": "7203613000000632001"
+  }
+}
+Parsed DNA: {
+  id: '7203613000000625007',
+  firm_name: 'Standard Onboarding (Solo) - Litowich',
+  practice_area: 'Family Law',
+  transfer_number: '+15550199',
+  agent_archetype: 'Gatekeeper',
+  client_email: 'tiago@theclaireai.com'
+}
+[CloneOps] Provisioning agent: {
+  "name": "Standard Onboarding (Solo) - Litowich - Gatekeeper Agent",
+  "template_id": "legal_strict_v1",
+  "config": {
+    "practice_area": "Family Law",
+    "transfer_number": "+15550199"
+  }
+}
+Skipping CloneOps API call: Missing or Placeholder CLONEOPS_API_KEY
+[Zoho CRM] Updating Deal 7203613000000625007 for Standard Onboarding (Solo) - Litowich...
+[Zoho CRM] Update Success: {
+  data: [
+    {
+      code: 'SUCCESS',
+      details: [Object],
+      message: 'record updated',
+      status: 'success'
+    }
+  ]
+}
+[Billing] Generating Invoice for Standard Onboarding (Solo) - Litowich...
+[Stripe] SIMULATION: Created mock link for Standard Onboarding (Solo) - Litowich
+Generating Documents with Logo & Payment Link...
+[Zoho CRM] Sending INVOICE to tiago@theclaireai.com (Deal 7203613000000625007)...
+[Zoho CRM] Attaching: /Users/tiago/.gemini/antigravity/scratch/ClaireOAutomations/public/documents/Invoice_inv_25757.pdf
+[Zoho CRM] Uploaded to Files API: Invoice_inv_25757.pdf -> ID: 82213492d4441a58d3fc338dc7f6fda9ac9bcf02afcff66aa1eb0c512bce2cddcfbecf83c00ff022d01a54bd90dc5098
+[Zoho CRM] Invoice Email Sent: {
+  data: [
+    {
+      code: 'SUCCESS',
+      details: [Object],
+      message: 'Your mail has been sent successfully.',
+      status: 'success'
+    }
+  ]
+}
+[Zoho CRM] Sending WELCOME PACKET to tiago@theclaireai.com (Deal 7203613000000625007)...
+[Zoho CRM] Attaching: /Users/tiago/.gemini/antigravity/scratch/ClaireOAutomations/public/documents/Contract_Standard_Onboarding_(Solo)_-_Litowich.pdf
+[Zoho CRM] Uploaded to Files API: Contract_Standard_Onboarding_(Solo)_-_Litowich.pdf -> ID: 56fd267db1fdc2f47e7af1e065a17fd5eec301edec1bf7652349cf838ddd4ab1d534898de42616627e73661d264aad44
+[Zoho CRM] Welcome Email Sent: {
+  data: [
+    {
+      code: 'SUCCESS',
+      details: [Object],
+      message: 'Your mail has been sent successfully.',
+      status: 'success'
+    }
+  ]
+}
