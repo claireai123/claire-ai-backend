@@ -29,16 +29,16 @@ async function processOnboarding(dna) {
     const paymentUrl = await createPaymentLink(dna.firm_name, setupFee, dna.id);
 
     // 4. Document Factory
-    console.log('Generating Documents with Logo & Payment Link...');
+    console.log('Generating Invoice with Logo & Payment Link...');
     const invoicePdfPath = await generateInvoicePDF(invoice, dna.firm_name, paymentUrl);
-    const contractPdfPath = await generateContract(dna.firm_name, dna.agent_archetype, paymentUrl);
+    // const contractPdfPath = await generateContract(dna.firm_name, dna.agent_archetype, paymentUrl); // Disabled per request
 
     // 5. Communications
     // A. Send the Bill first
     await sendInvoiceEmail(dna.id || 'DEMO', dna.client_email, invoice, invoicePdfPath, paymentUrl);
 
-    // B. Send the Warm Welcome
-    await sendWelcomePacket(dna.id || 'DEMO', dna.client_email, dna.firm_name, dna.agent_archetype, contractPdfPath, paymentUrl);
+    // B. Send the Warm Welcome - DISABLED
+    // await sendWelcomePacket(dna.id || 'DEMO', dna.client_email, dna.firm_name, dna.agent_archetype, contractPdfPath, paymentUrl);
 
     return {
         message: 'Professional Onboarding initiated',
