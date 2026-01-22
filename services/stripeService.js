@@ -48,7 +48,7 @@ async function createPaymentLink(firmName, amount, dealId) {
                             currency: 'usd',
                             product_data: {
                                 name: `ClaireAI Setup - ${firmName}`,
-                                description: 'Custom AI Receptionist Configuration',
+                                description: 'Professional Setup & Configuration of ClaireAI Receptionist. Includes: Voice Humanization Tuning, Knowledge Base Ingestion, CRM Integration (Zoho/HubSpot/Clio), Custom Call Routing Logic Design, and After-Hours Workflow Automation.',
                             },
                             unit_amount: amount * 100,
                         },
