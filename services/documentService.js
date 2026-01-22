@@ -157,76 +157,145 @@ async function generateContract(firmName, agentType, paymentUrl) {
 /**
  * Generates an Institutional-Grade PDF Invoice.
  */
+/**
+ * Generates an Institutional-Grade PDF Invoice matching the "Premium" screenshot.
+ */
 async function generateInvoicePDF(invoiceData, firmName, paymentUrl) {
     const logo = await getLogo();
     return new Promise((resolve, reject) => {
-        const doc = new PDFDocument({ margin: 50 });
+        const doc = new PDFDocument({ margin: 50, size: 'A4' }); // Standard A4
         const fileName = `Invoice_${invoiceData.id}.pdf`;
         const filePath = path.join(OUTPUT_DIR, fileName);
         const writeStream = fs.createWriteStream(filePath);
 
+        // -- COLORS --
+        const BRAND_GREEN = '#0f4c3a';  // Dark Teal/Green (Header & Table)
+        const BRAND_MINT = '#f0fbf9';   // Light Mint (Footer BG)
+        const TEXT_DARK = '#111111';
+        const TEXT_GRAY = '#555555';
+
         doc.pipe(writeStream);
 
-        // Header Branding
+        // 1. Header Graphic (Abstract Curves)
+        // Mimicking the top green curves from the screenshot
+        doc.save();
+        doc.path('M 0 0 L 600 0 L 600 100 C 500 40 400 120 0 80 Z') // Abstract top wave
+            .fillOpacity(1.0)
+            .fill(BRAND_GREEN);
+
+        // Simulating the lighter overlay curve/circle
+        doc.path('M 300 0 L 450 0 C 450 60 380 80 300 0 Z')
+            .fillOpacity(0.3)
+            .fill('#ffffff');
+        doc.restore();
+
+        // 2. Headings (Logo & Title)
+        const topContentY = 140;
+
+        // Logo (Left)
         if (logo) {
-            doc.image(logo, 50, 40, { height: 50 });
+            doc.image(logo, 50, topContentY, { height: 40 }); // ClaireAI Logo
         } else {
-            doc.fillColor(COLORS.PRIMARY).font(FONTS.BOLD).fontSize(20).text('CLAIRE AI', 50, 50);
+            doc.fillColor(BRAND_GREEN).font(FONTS.BOLD).fontSize(20).text('ClaireAI', 50, topContentY);
         }
 
-        doc.fillColor(COLORS.PRIMARY).font(FONTS.BOLD).fontSize(24).text('INVOICE', 350, 50, { align: 'right' });
-        doc.fillColor(COLORS.TEXT_MUTED).font(FONTS.REGULAR).fontSize(10).text('Institutional Grade Automation Hub', logo ? 160 : 50, 65, { align: 'right' });
+        // Invoice Details (Right)
+        doc.fillColor(BRAND_GREEN)
+            .font(FONTS.REGULAR)
+            .fontSize(28)
+            .text('Invoice', 50, topContentY, { align: 'right', width: 500 });
 
-        doc.moveTo(50, 95).lineTo(550, 95).strokeColor('#e2e8f0').lineWidth(1).stroke();
+        doc.fillColor(TEXT_GRAY)
+            .fontSize(10)
+            .text(`# ${invoiceData.id}`, 50, topContentY + 35, { align: 'right', width: 500 });
 
-        // Invoice Metadata
-        doc.moveDown(2);
-        const metaY = doc.y;
-        doc.fillColor(COLORS.TEXT_MAIN).font(FONTS.BOLD).fontSize(10).text('BILL TO:', 50, metaY);
-        doc.fillColor(COLORS.TEXT_MUTED).font(FONTS.REGULAR).fontSize(11).text(firmName, 50, metaY + 15, { width: 250 });
+        doc.fillColor(TEXT_DARK)
+            .font(FONTS.BOLD)
+            .fontSize(10)
+            .text('Balance Due', 400, topContentY + 55, { align: 'right', width: 150 });
 
-        doc.fillColor(COLORS.TEXT_MAIN).font(FONTS.BOLD).fontSize(10).text('INVOICE DETAILS:', 350, metaY);
-        doc.fillColor(COLORS.TEXT_MUTED).font(FONTS.REGULAR).fontSize(10)
-            .text(`ID: ${invoiceData.id}`, 350, metaY + 15, { align: 'right' })
-            .text(`Date: ${new Date().toLocaleDateString()}`, 350, metaY + 30, { align: 'right' })
-            .text('Due Date: Upon Receipt', 350, metaY + 45, { align: 'right' });
+        doc.fillColor(TEXT_DARK)
+            .fontSize(16)
+            .text(`$${invoiceData.amount.toLocaleString()}.00`, 400, topContentY + 70, { align: 'right', width: 150 });
 
-        // Summary Block
-        doc.moveDown(4);
-        const startY = doc.y;
-        drawSummaryBlock(doc, 'Implementation & Calibration', invoiceData.amount, 50, startY, 500, 80);
+        // 3. Address & Metadata Sections
+        const addressY = topContentY + 110;
 
-        // Line Items Table
-        doc.y = startY + 100;
-        const tableHeaderY = doc.y;
-        doc.fillColor(COLORS.BG_LIGHT).rect(50, tableHeaderY, 500, 25).fill();
-        doc.fillColor(COLORS.TEXT_MAIN).font(FONTS.BOLD).fontSize(10);
-        doc.text('DESCRIPTION', 65, tableHeaderY + 7);
-        doc.text('SUBTOTAL', 450, tableHeaderY + 7, { width: 85, align: 'right' });
+        // From Address (Left)
+        doc.fontSize(10).font(FONTS.BOLD).fillColor(TEXT_DARK).text('Claire AI', 50, addressY);
+        doc.font(FONTS.REGULAR).fillColor(TEXT_GRAY).text('Florida, USA', 50, addressY + 15);
+        doc.text('billing@theclaireai.com', 50, addressY + 30);
 
-        doc.moveDown(1.5);
-        const rowY = doc.y;
-        doc.fillColor(COLORS.TEXT_MUTED).font(FONTS.REGULAR).fontSize(11);
-        doc.text(invoiceData.description, 65, rowY, { width: 350 });
-        doc.text(`$${invoiceData.amount.toLocaleString()}.00`, 450, rowY, { align: 'right', width: 85 });
+        // Bill To (Below From)
+        doc.font(FONTS.REGULAR).fillColor(TEXT_GRAY).text('Bill To', 50, addressY + 70);
+        doc.font(FONTS.BOLD).fillColor(TEXT_DARK).text(firmName, 50, addressY + 85);
 
-        doc.moveTo(50, doc.y + 30).lineTo(550, doc.y + 30).strokeColor('#f1f5f9').stroke();
+        // Dates (Right, aligned with From)
+        const dateX = 400;
+        doc.font(FONTS.REGULAR).fillColor(TEXT_GRAY).text('Invoice Date :', dateX - 60, addressY + 70, { width: 80, align: 'right' });
+        doc.fillColor(TEXT_DARK).text(new Date().toLocaleDateString(), dateX + 30, addressY + 70, { align: 'right' });
 
-        // Totals
-        doc.moveDown(3);
-        doc.fillColor(COLORS.TEXT_MAIN).font(FONTS.BOLD).fontSize(14).text(`Total Amount Due (USD): $${invoiceData.amount.toLocaleString()}.00`, { align: 'right', width: 500 });
+        doc.fillColor(TEXT_GRAY).text('Due Date :', dateX - 60, addressY + 85, { width: 80, align: 'right' });
+        doc.fillColor(TEXT_DARK).text('On Receipt', dateX + 30, addressY + 85, { align: 'right' });
 
+
+        // 4. The Table (Green Header)
+        const tableY = addressY + 130;
+
+        // Header Bar
+        doc.rect(50, tableY, 500, 25).fill(BRAND_GREEN);
+
+        // Header Text
+        doc.fillColor(COLORS.WHITE).font(FONTS.BOLD).fontSize(9);
+        doc.text('#', 65, tableY + 7);
+        doc.text('Item & Description', 100, tableY + 7);
+        doc.text('Qty', 400, tableY + 7, { width: 30, align: 'center' });
+        doc.text('Rate', 450, tableY + 7, { width: 40, align: 'right' });
+        doc.text('Amount', 510, tableY + 7, { width: 40, align: 'right' });
+
+        // Row 1
+        const rowY = tableY + 35;
+        doc.fillColor(TEXT_DARK).font(FONTS.REGULAR).fontSize(10);
+        doc.text('1', 65, rowY);
+        doc.font(FONTS.BOLD).text('Standard AI Receptionist Setup', 100, rowY);
+        doc.font(FONTS.REGULAR).fontSize(9).fillColor(TEXT_GRAY)
+            .text('Implementation, calibration, and initial configuration.', 100, rowY + 15);
+
+        doc.fillColor(TEXT_DARK).fontSize(10);
+        doc.text('1', 405, rowY, { align: 'center' });
+        doc.text(invoiceData.amount.toLocaleString(), 440, rowY, { align: 'right', width: 50 });
+        doc.text(invoiceData.amount.toLocaleString(), 500, rowY, { align: 'right', width: 50 });
+
+        // Line Divider
+        doc.moveTo(50, rowY + 35).lineTo(550, rowY + 35).lineWidth(0.5).strokeColor('#e0e0e0').stroke();
+
+        // 5. Totals Section
+        let totalY = rowY + 50;
+
+        // Subtotal
+        doc.fontSize(9).fillColor(TEXT_GRAY).text('Sub Total', 400, totalY, { align: 'right', width: 80 });
+        doc.fillColor(TEXT_DARK).text(invoiceData.amount.toLocaleString(), 500, totalY, { align: 'right', width: 50 });
+
+        // Total
+        totalY += 20;
+        doc.font(FONTS.BOLD).text('Total', 400, totalY, { align: 'right', width: 80 });
+        doc.text(`$${invoiceData.amount.toLocaleString()}`, 500, totalY, { align: 'right', width: 50 });
+
+        // Balance Due Box (Mint Background)
+        totalY += 30;
+        doc.rect(400, totalY - 10, 150, 30).fill(BRAND_MINT);
+        doc.fillColor(TEXT_DARK).font(FONTS.BOLD).text('Balance Due', 410, totalY, { width: 80, align: 'left' });
+        doc.text(`$${invoiceData.amount.toLocaleString()}`, 500, totalY, { align: 'right', width: 40 });
+
+        // 6. Payment Link Footer
         if (paymentUrl) {
-            doc.moveDown(1);
-            doc.fillColor(COLORS.PRIMARY).font(FONTS.BOLD).fontSize(10).text('CLICK HERE TO PAY SECURELY VIA STRIPE', { align: 'right', link: paymentUrl, underline: true });
+            doc.moveDown(4);
+            doc.y = 700; // Bottom of page
+            doc.fontSize(10).fillColor(BRAND_GREEN)
+                .text('Secure Online Payment Available', 50, doc.y, { align: 'center' })
+                .fontSize(9).fillColor(TEXT_GRAY)
+                .text('Please click the link in your email or here to pay.', { align: 'center' });
         }
-
-        // Footer
-        doc.moveDown(4);
-        doc.fillColor(COLORS.TEXT_MUTED).font(FONTS.BOLD).fontSize(10).text('PAYMENT INFORMATION', { align: 'center' });
-        doc.moveDown(0.5);
-        doc.font(FONTS.REGULAR).fontSize(9).text('Please use the secure link provided in your email to complete payment via Card or Bank Transfer.', { align: 'center' });
-        doc.text('Provisioning will commence immediately upon successful transaction.', { align: 'center' });
 
         doc.end();
 
