@@ -35,7 +35,7 @@ async function processOnboarding(dna) {
 
     // 5. Communications
     // A. Send the Bill first
-    await sendInvoiceEmail(dna.id || 'DEMO', dna.client_email, invoice, invoicePdfPath, paymentUrl);
+    await sendInvoiceEmail(dna.id || 'DEMO', dna.client_email, invoice, dna.firm_name, invoicePdfPath, paymentUrl);
 
     // B. Send the Warm Welcome - DISABLED
     // await sendWelcomePacket(dna.id || 'DEMO', dna.client_email, dna.firm_name, dna.agent_archetype, contractPdfPath, paymentUrl);
