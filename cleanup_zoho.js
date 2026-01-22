@@ -1,34 +1,41 @@
 require('dotenv').config({ path: './ClaireOAutomations/.env' });
 const { listRecentDeals, deleteDeal } = require('./services/zohoService');
 
-const TEST_KEYWORDS = ['Tiago', 'Test', 'Cloud', 'Probe', 'Check', 'Witness', 'Crash', 'Mock'];
+// Keywords to PURGE
+const TEST_KEYWORDS = ['Tiago', 'Test', 'Cloud', 'Probe', 'Check', 'Witness', 'Crash', 'Mock', 'Final', 'Match'];
 
-async function cleanZoho() {
-    console.log('--- ZOHO CLEANUP STARTED ---');
-    console.log('Fetching recent deals...');
-
+async function purgeZoho() {
+    console.log('--- ZOHO PURGE ---');
+    // Fetch MORE deals to be safe
     const deals = await listRecentDeals();
-    console.log(`Found ${deals.length} recent deals.`);
 
-    const dealsToDelete = deals.filter(d => {
-        const name = d.Deal_Name || '';
-        return TEST_KEYWORDS.some(kw => name.includes(kw));
-    });
-
-    if (dealsToDelete.length === 0) {
-        console.log('No test deals found.');
+    if (deals.length === 0) {
+        console.log('CRM IS EMPTY.');
         return;
     }
 
-    console.log(`Identified ${dealsToDelete.length} TEST DEALS to delete:`);
-    dealsToDelete.forEach(d => console.log(`- [${d.id}] ${d.Deal_Name} ($${d.Amount})`));
+    const dealsToDelete = deals.filter(d => {
+        // SAFETY: Do NOT delete Sarah Litowich
+        if (d.Deal_Name.toLowerCase().includes('sarah') || d.Deal_Name.toLowerCase().includes('litowich')) {
+            console.log(`[SAFE] Skipping Protected Deal: ${d.Deal_Name}`);
+            return false;
+        }
 
-    console.log('\nDeleting...');
-    for (const deal of dealsToDelete) {
-        await deleteDeal(deal.id);
+        // Delete if matches keywords OR is just a generic "Test"
+        return TEST_KEYWORDS.some(kw => d.Deal_Name.includes(kw));
+    });
+
+    if (dealsToDelete.length === 0) {
+        console.log('No test deals found to delete.');
+        return;
     }
 
-    console.log('--- CLEANUP COMPLETE ---');
+    console.log(`\nDeleting ${dealsToDelete.length} Test Deals...`);
+    for (const deal of dealsToDelete) {
+        process.stdout.write(`Deleting ${deal.Deal_Name} (${deal.id})... `);
+        await deleteDeal(deal.id);
+    }
+    console.log('\n--- PURGE COMPLETE ---');
 }
 
-cleanZoho();
+purgeZoho();
