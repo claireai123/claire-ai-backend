@@ -13,8 +13,11 @@ const CURRENCY = 'USD';
  * @param {string} firmName - The name of the law firm.
  * @returns {Promise<Object>} - The invoice details including a payment link.
  */
-async function createInvoice(firmName) {
+async function createInvoice(firmName, amount) {
     console.log(`[Billing] Generating Invoice for ${firmName}...`);
+
+    // Use passed amount or default to Growth Plan ($1,250)
+    const finalAmount = amount || 1250;
 
     // SIMULATION: In a real app, this would call Stripe API
     const mockInodeId = 'inv_' + Math.floor(Math.random() * 100000);
@@ -22,7 +25,7 @@ async function createInvoice(firmName) {
 
     return {
         id: mockInodeId,
-        amount: SETUP_FEE_CENTS / 100, // Convert to dollars for display
+        amount: finalAmount, // Dynamic Amount
         currency: CURRENCY,
         status: 'draft', // Generated but not paid
         payment_link: mockUrl,

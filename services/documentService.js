@@ -24,7 +24,8 @@ const LOGO_URL = 'https://res.cloudinary.com/dwzsqumf6/image/upload/v1765854323/
 let logoBuffer = null;
 
 // Ensure output directory exists
-const OUTPUT_DIR = path.join(__dirname, '../public/documents');
+// Use /tmp for cloud compatibility (Render/Heroku/Lambda often restrict writing to app dir)
+const OUTPUT_DIR = path.join('/tmp', 'documents');
 if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 }
