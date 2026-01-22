@@ -111,27 +111,46 @@ async function uploadAttachment(filePath, token) {
 /**
  * Sends the Setup Invoice with Pixel-Perfect Design matching the screenshot.
  */
-async function sendInvoiceEmail(dealId, toEmail, invoice, attachmentPath, paymentUrl) {
+async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPath, paymentUrl) {
     if (!dealId || !toEmail) return;
 
     console.log(`[Zoho CRM] Sending INVOICE to ${toEmail} (Deal ${dealId})...`);
 
-    // Design matching the screenshot
+    // Design matching the "Correct" Screenshot (Zoho Subscriptions Style)
+    // Key Changes: Flat border, No Shadow, Specific Padding
     const HTML_TEMPLATE = `
     <!DOCTYPE html>
     <html>
     <head>
         <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f6f9fc; margin: 0; padding: 40px; }
-            .container { background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
-            .logo { height: 35px; margin-bottom: 30px; }
-            .title { color: #555; font-size: 14px; margin-bottom: 5px; font-weight: 500; }
-            .invoice-num { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 5px; }
-            .client-name { color: #666; font-size: 14px; margin-bottom: 30px; }
-            .amount { font-size: 36px; font-weight: 800; color: #333; margin-bottom: 30px; letter-spacing: -0.5px; }
-            .btn-primary { background-color: #2563eb; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block; font-size: 16px; margin-bottom: 30px; }
-            .footer { color: #999; font-size: 12px; margin-top: 20px; }
-            .intro { text-align: left; color: #333; font-size: 16px; margin-bottom: 40px; line-height: 1.5; }
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 40px; }
+            .container { 
+                background-color: #ffffff; 
+                max-width: 500px; 
+                margin: 0 auto; 
+                padding: 40px; 
+                border: 1px solid #e0e0e0; 
+                border-radius: 4px; 
+                text-align: center; 
+            }
+            .logo { height: 32px; margin-bottom: 25px; }
+            .title { color: #666; font-size: 13px; margin-bottom: 8px; font-weight: 400; }
+            .invoice-num { font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px; }
+            .client-name { color: #666; font-size: 14px; margin-bottom: 25px; }
+            .amount { font-size: 38px; font-weight: 700; color: #000; margin-bottom: 30px; letter-spacing: -0.5px; }
+            .btn-primary { 
+                background-color: #0070e0; /* Zoho/Stripe Blue */
+                color: #ffffff; 
+                padding: 12px 40px; 
+                text-decoration: none; 
+                border-radius: 4px; 
+                font-weight: 600; 
+                display: inline-block; 
+                font-size: 15px; 
+                margin-bottom: 30px; 
+            }
+            .footer { color: #999; font-size: 12px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+            .intro { text-align: left; color: #333; font-size: 15px; margin-bottom: 30px; line-height: 1.6; max-width: 500px; margin-left: auto; margin-right: auto; }
         </style>
     </head>
     <body>
@@ -144,6 +163,7 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, attachmentPath, paymen
             
             <div class="title">Invoice from ClaireAI</div>
             <div class="invoice-num">Invoice #${invoice.id}</div> 
+            <div class="client-name">For: ${firmName}</div>
             <div class="amount">$${invoice.amount.toLocaleString()}.00</div>
             
             <a href="${paymentUrl}" class="btn-primary">Pay Invoice</a>

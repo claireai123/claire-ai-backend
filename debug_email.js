@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './ClaireOAutomations/.env' });
 const { sendInvoiceEmail } = require('./services/zohoService');
 const { generateInvoicePDF } = require('./services/documentService');
 
@@ -7,7 +7,7 @@ const DEAL_ID = '7203613000000746002'; // The "Enterprise Test" deal we created
 const EMAIL = 'tiago@theclaireai.com';
 const INVOICE = {
     id: 'INV-DEBUG-001',
-    amount: 2999,
+    amount: 650,
     description: 'Debug Invoice Item'
 };
 
