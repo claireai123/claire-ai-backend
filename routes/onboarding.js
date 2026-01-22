@@ -15,10 +15,10 @@ async function processOnboarding(dna) {
     const provisionResult = await provisionAgent(dna);
 
     // 2b. Update Zoho (The CRM)
-    if (dna.id) {
+    if (dna.id && !dna.id.startsWith('DEMO')) {
         await sendProvisioningUpdate(dna.id, dna.firm_name, dna.agent_archetype);
     } else {
-        console.log('[Core] No Deal ID, skipping Zoho CRM update.');
+        console.log('[Core] Skipping Zoho CRM update (Demo or No ID).');
     }
 
     // 3. Billing (The Finance) - Use Deal Amount or Default to Growth Plan
