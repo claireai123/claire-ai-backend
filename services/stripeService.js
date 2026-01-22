@@ -15,27 +15,54 @@ async function createPaymentLink(firmName, amount, dealId) {
         return `https://checkout.stripe.com/pay/mock_${dealId}_cIaireai`;
     }
 
+    // Plan Mapping (Generated via stripe_sync.js)
+    const PLANS = {
+        650: 'price_1SsTZe9vzmXGIElUEMFmo5K8',   // Starter
+        1250: 'price_1SsTZf9vzmXGIElULER2nuHY',  // Growth
+        3000: 'price_1SsTZg9vzmXGIElUAIkpB50V'   // Enterprise
+    };
+
     try {
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: `ClaireAI Setup & Implementation - ${firmName}`,
-                            description: 'Initial calibration, persona engineering, and CRM integration.',
+        const priceId = PLANS[amount];
+        let sessionConfig;
+
+        if (priceId) {
+            // SUBSCRIPTION MODE (Using Product)
+            console.log(`[Stripe] Matched Plan for $${amount}: ${priceId} (Subscription Mode)`);
+            sessionConfig = {
+                payment_method_types: ['card'],
+                line_items: [{ price: priceId, quantity: 1 }],
+                mode: 'subscription', // Auto-bills monthly
+                success_url: 'https://theclaireai.com/onboarding/success',
+                cancel_url: 'https://theclaireai.com/onboarding/cancel',
+                client_reference_id: dealId,
+            };
+        } else {
+            // ONE-OFF MODE (Custom Amount)
+            console.log(`[Stripe] No Plan matched for $${amount}. Using Custom One-Time Charge.`);
+            sessionConfig = {
+                payment_method_types: ['card'],
+                line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: `ClaireAI Setup - ${firmName}`,
+                                description: 'Custom AI Receptionist Configuration',
+                            },
+                            unit_amount: amount * 100,
                         },
-                        unit_amount: amount * 100, // Stripe expects cents
+                        quantity: 1,
                     },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
-            success_url: 'https://theclaireai.com/onboarding/success',
-            cancel_url: 'https://theclaireai.com/onboarding/cancel',
-            client_reference_id: dealId,
-        });
+                ],
+                mode: 'payment', // One-time
+                success_url: 'https://theclaireai.com/onboarding/success',
+                cancel_url: 'https://theclaireai.com/onboarding/cancel',
+                client_reference_id: dealId,
+            };
+        }
+
+        const session = await stripe.checkout.sessions.create(sessionConfig);
 
         console.log(`[Stripe] Created Payment Session for ${firmName}: ${session.url}`);
         return session.url;
