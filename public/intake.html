@@ -4,116 +4,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claire AI - Client Intake</title>
+    <title>Claire AI - Staff Portal</title>
     <style>
         :root {
-            --primary: #0f172a;
-            --accent: #3b82f6;
-            --bg: #f8fafc;
-            --text: #334155;
+            --primary: #0f4c3a;
+            /* Claire Dark Green */
+            --accent: #22c55e;
+            --bg: #f0fdf4;
+            --text: #1e293b;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg);
+            background: url('/assets/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
             color: var(--text);
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
             margin: 0;
         }
 
+        /* Dark Overlay for readability */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 76, 58, 0.85);
+            /* Green Tint Overlay */
+            z-index: -1;
+        }
+
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.98);
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        .logo {
+            width: 180px;
+            margin-bottom: 20px;
         }
 
         h1 {
             color: var(--primary);
             margin-top: 0;
-            font-size: 24px;
-            border-bottom: 2px solid var(--bg);
-            padding-bottom: 16px;
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: none;
+            padding-bottom: 5px;
         }
 
         .description {
-            margin-bottom: 30px;
-            font-size: 14px;
+            margin-bottom: 25px;
+            font-size: 13px;
             color: #64748b;
+            font-weight: 500;
         }
 
+        /* Form Styling */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            text-align: left;
         }
 
         label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--primary);
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.5px;
         }
 
         input,
         textarea,
         select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            box-sizing: border-box;
-            /* Important for padding */
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 8px;
             font-size: 14px;
-            transition: border-color 0.2s;
         }
 
         input:focus,
         textarea:focus {
-            border-color: var(--accent);
-            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(15, 76, 58, 0.1);
         }
 
         button {
             background-color: var(--primary);
             color: white;
-            padding: 14px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: opacity 0.2s;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px -1px rgba(15, 76, 58, 0.4);
         }
 
         button:hover {
-            opacity: 0.9;
-        }
-
-        .hidden {
-            display: none;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(15, 76, 58, 0.4);
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Onboarding Intake</h1>
-        <p class="description">Please provide the operational details required to configure your AI Agent. This ensures
-            we represent your firm accurately.</p>
+        <img src="/assets/logo.png" alt="Claire AI" class="logo">
+        <h1>Internal Intake Portal</h1>
+        <p class="description">New Client Provisioning System</p>
 
         <form id="intakeForm">
             <!-- Hidden Firm Name (Auto-filled from URL) -->
             <input type="hidden" id="firmName" name="firmName">
 
             <div class="form-group">
-                <label for="email">Your Email (for notifications)</label>
-                <input type="email" id="email" name="email" placeholder="tiago@theclaireai.com" required>
+                <label for="email">Client Email</label>
+                <input type="email" id="email" name="email" placeholder="client@lawfirm.com" required>
             </div>
 
             <div class="form-group">
