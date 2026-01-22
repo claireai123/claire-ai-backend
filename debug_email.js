@@ -22,7 +22,7 @@ async function runDebug() {
 
         // 2. Send Email
         console.log('2. Sending Email via Zoho...');
-        const result = await sendInvoiceEmail(DEAL_ID, EMAIL, INVOICE, pdfPath, "http://google.com");
+        const result = await sendInvoiceEmail(DEAL_ID, EMAIL, INVOICE, "Debug Firm", pdfPath, "http://google.com");
 
         console.log('--- RESULT ---');
         console.log(JSON.stringify(result, null, 2));
