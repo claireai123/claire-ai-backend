@@ -15,10 +15,17 @@ async function processOnboarding(dna) {
     const provisionResult = await provisionAgent(dna);
 
     // 2b. Update Zoho (The CRM)
-    if (dna.id && !dna.id.startsWith('DEMO')) {
-        await sendProvisioningUpdate(dna.id, dna.firm_name, dna.agent_archetype);
+    // 2b. Update Zoho (The CRM)
+    // Skip for DEMO or CLOUD testing IDs
+    if (dna.id && !dna.id.startsWith('DEMO') && !dna.id.startsWith('CLOUD')) {
+        try {
+            await sendProvisioningUpdate(dna.id, dna.firm_name, dna.agent_archetype);
+        } catch (crmError) {
+            console.error('[WARNING] Zoho Update Failed (Non-Fatal):', crmError.message);
+            // Continue execution - don't block the invoice!
+        }
     } else {
-        console.log('[Core] Skipping Zoho CRM update (Demo or No ID).');
+        console.log('[Core] Skipping Zoho CRM update (Demo/Cloud/No ID).');
     }
 
     // 3. Billing (The Finance) - Use Deal Amount or Default to Growth Plan
