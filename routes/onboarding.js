@@ -49,8 +49,9 @@ async function processOnboarding(dna) {
 
     // 5. Communications
     // A. Send the Bill first
+    let emailResult;
     try {
-        await sendInvoiceEmail(dna.id || 'DEMO', dna.client_email, invoice, dna.firm_name, invoicePdfPath, paymentUrl);
+        emailResult = await sendInvoiceEmail(dna.id || 'DEMO', dna.client_email, invoice, dna.firm_name, invoicePdfPath, paymentUrl);
     } catch (emailError) {
         console.error('[CRITICAL] Email Sending Failed:', emailError.message);
         // We don't throw here to allow response to return partial success if needed, 
@@ -63,7 +64,8 @@ async function processOnboarding(dna) {
         provisioning_id: provisionResult.id || 'mock-id',
         invoice_id: invoice.id,
         payment_url: paymentUrl,
-        debug_pdf_path: invoicePdfPath
+        debug_pdf_path: invoicePdfPath,
+        zoho_email_result: emailResult // Capture the raw response from Zoho
     };
 }
 
