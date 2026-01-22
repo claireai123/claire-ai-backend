@@ -138,65 +138,82 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPa
             .invoice-num { font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px; }
             .client-name { color: #666; font-size: 14px; margin-bottom: 25px; }
         <style>
-            body { font-family: Helvetica, Arial, sans-serif; background-color: #eff2f5; margin: 0; padding: 0; }
-            .wrapper { width: 100%; background-color: #eff2f5; padding: 60px 0; }
-            .container {
-                max-width: 480px;
-                margin: 0 auto;
-                padding: 40px 50px;
-                background: #ffffff;
-                border-radius: 12px;
-                text-align: center;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-                color: #333333;
-            }
-            .logo { max-width: 140px; margin-bottom: 30px; }
-            .title { font-size: 13px; color: #64748b; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-            .invoice-num { font-size: 24px; color: #1e293b; font-weight: 700; margin-bottom: 5px; }
-            .client-name { color: #64748b; font-size: 14px; margin-bottom: 35px; }
-            .amount { font-size: 56px; color: #0f4c3a; font-weight: 700; margin-bottom: 40px; letter-spacing: -2px; }
+            /* Client-specific resets */
+            body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+            table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+            img { -ms-interpolation-mode: bicubic; }
+            img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
             
-            .btn-primary { 
-                background-color: #0f4c3a; 
-                color: white; 
-                padding: 16px 48px; 
-                text-decoration: none; 
-                border-radius: 8px; 
-                font-weight: 600; 
+            body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: Helvetica, Arial, sans-serif; background-color: #f4f6f8; }
+            
+            /* Button Style */
+            .btn-primary {
+                background-color: #0f4c3a;
+                color: #ffffff;
                 display: inline-block;
+                padding: 16px 40px;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: bold;
                 font-size: 16px;
-                box-shadow: 0 4px 6px rgba(15, 76, 58, 0.2);
             }
-            .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(15, 76, 58, 0.3); }
-            
-            .footer { color: #94a3b8; font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9; }
-            .intro { text-align: left; color: #334155; font-size: 15px; margin-bottom: 30px; line-height: 1.6; max-width: 500px; margin-left: auto; margin-right: auto; }
         </style>
     </head>
-    <body>
-        <div class="wrapper">
-            <div class="intro">
-                Hi there,<br><br>
-                Thank you for choosing ClaireAI! Please find your invoice details below.
-            </div>
-            
-            <div class="container">
-                <img src="https://res.cloudinary.com/dwzsqumf6/image/upload/v1765854323/logo_transparent_ec9ge1.png" alt="ClaireAI" class="logo">
-                
-                <div class="title">Invoice from ClaireAI</div>
-                <div class="invoice-num">Invoice #${invoice.id}</div> 
-                <div class="client-name">For: ${firmName}</div>
-                <div class="amount">$${invoice.amount.toLocaleString()}.00</div>
-                
-                <a href="${paymentUrl}" class="btn-primary">Pay Invoice</a>
-                
-                <div class="footer">Due: Upon Receipt</div>
-            </div>
-            
-            <div style="text-align: center; color: #999; font-size: 11px; margin-top: 20px;">
-                © ${new Date().getFullYear()} ClaireAI LLC. All rights reserved.
-            </div>
-        </div>
+    <body style="background-color: #f4f6f8; margin: 0; padding: 0;">
+        <!-- MAIN WRAPPER TABLE -->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f6f8;">
+            <tr>
+                <td align="center" style="padding: 40px 0;">
+                    
+                    <!-- INTRO TEXT -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;">
+                        <tr>
+                            <td align="left" style="padding-bottom: 20px; color: #333333; font-size: 16px; line-height: 24px;">
+                                Hi there,<br><br>
+                                Thank you for choosing ClaireAI! Please find your invoice details below.
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- WHITE CARD TABLE -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; background-color: #ffffff; border-radius: 12px; border: 1px solid #e0e0e0 box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <tr>
+                            <td align="center" style="padding: 40px;">
+                                <!-- LOGO (Hardcoded Width) -->
+                                <img src="https://res.cloudinary.com/dwzsqumf6/image/upload/v1765854323/logo_transparent_ec9ge1.png" width="140" alt="ClaireAI" style="display: block; border: 0; max-width: 140px; width: 140px; margin-bottom: 30px;">
+                                
+                                <!-- CONTENT -->
+                                <div style="font-size: 13px; color: #64748b; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Invoice from ClaireAI</div>
+                                <div style="font-size: 24px; color: #1e293b; font-weight: 700; margin-bottom: 5px;">Invoice #${invoice.id}</div>
+                                <div style="font-size: 14px; color: #64748b; margin-bottom: 30px;">For: ${firmName}</div>
+                                <div style="font-size: 56px; color: #0f4c3a; font-weight: 700; margin-bottom: 40px; letter-spacing: -2px;">$${invoice.amount.toLocaleString()}.00</div>
+                                
+                                <!-- BUTTON -->
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td align="center" bgcolor="#0f4c3a" style="border-radius: 8px;">
+                                            <a href="${paymentUrl}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 16px 48px; border-radius: 8px; border: 1px solid #0f4c3a; display: inline-block; font-weight: bold;">Pay Invoice</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <div style="color: #94a3b8; font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9;">Due: Upon Receipt</div>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <!-- FOOTER -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;">
+                        <tr>
+                            <td align="center" style="padding-top: 20px; color: #999999; font-size: 11px;">
+                                © ${new Date().getFullYear()} ClaireAI LLC. All rights reserved.
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </td>
+            </tr>
+        </table>
     </body>
     </html>
     `;
