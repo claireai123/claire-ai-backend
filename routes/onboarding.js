@@ -11,8 +11,10 @@ const { createPaymentLink } = require('../services/stripeService');
 async function processOnboarding(dna) {
     console.log(`[Core] Processing Onboarding for: ${dna.firm_name}`);
 
-    // 2. Provision Agent (The Operations)
-    const provisionResult = await provisionAgent(dna);
+    // 2. Provision Agent (REMOVED per user request)
+    // const provisionResult = await provisionAgent(dna);
+    console.log('[Core] CloneOps Provisioning skipped (Code Removed).');
+    const provisionResult = { id: 'manual-provision' };
 
     // 2b. Update Zoho (The CRM)
     // 2b. Update Zoho (The CRM)
