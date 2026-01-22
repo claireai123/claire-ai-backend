@@ -176,7 +176,7 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPa
                     </table>
 
                     <!-- WHITE CARD TABLE -->
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; background-color: #ffffff; border-radius: 12px; border: 1px solid #e0e0e0 box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; background-color: #ffffff; border-radius: 12px; border: 1px solid #e0e0e0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                         <tr>
                             <td align="center" style="padding: 40px;">
                                 <!-- LOGO (Hardcoded Width) -->
