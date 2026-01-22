@@ -138,22 +138,19 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPa
             .invoice-num { font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px; }
             .client-name { color: #666; font-size: 14px; margin-bottom: 25px; }
         <style>
-            body { font-family: Helvetica, Arial, sans-serif; background-color: #f9f9f9; padding: 0; margin: 0; }
+            body { font-family: Helvetica, Arial, sans-serif; background-color: #eff2f5; margin: 0; padding: 0; }
+            .wrapper { width: 100%; background-color: #eff2f5; padding: 60px 0; }
             .container {
-                max-width: 500px;
-                margin: 40px auto;
-                padding: 40px;
-                background: #ffffff; /* CLEAN WHITE CARD */
-                border: 1px solid #e0e0e0;
+                max-width: 480px;
+                margin: 0 auto;
+                padding: 40px 50px;
+                background: #ffffff;
                 border-radius: 12px;
                 text-align: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.08);
                 color: #333333;
             }
-            .logo { 
-                max-width: 140px; 
-                margin-bottom: 30px;
-            }
+            .logo { max-width: 140px; margin-bottom: 30px; }
             .title { font-size: 13px; color: #64748b; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
             .invoice-num { font-size: 24px; color: #1e293b; font-weight: 700; margin-bottom: 5px; }
             .client-name { color: #64748b; font-size: 14px; margin-bottom: 35px; }
@@ -177,21 +174,28 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPa
         </style>
     </head>
     <body>
-        <div class="intro">
-            Hi there,<br><br>
-            Thank you for choosing ClaireAI! Please find your invoice details below.
-        </div>
-        <div class="container">
-            <img src="https://res.cloudinary.com/dwzsqumf6/image/upload/v1765854323/logo_transparent_ec9ge1.png" alt="ClaireAI" class="logo">
+        <div class="wrapper">
+            <div class="intro">
+                Hi there,<br><br>
+                Thank you for choosing ClaireAI! Please find your invoice details below.
+            </div>
             
-            <div class="title">Invoice from ClaireAI</div>
-            <div class="invoice-num">Invoice #${invoice.id}</div> 
-            <div class="client-name">For: ${firmName}</div>
-            <div class="amount">$${invoice.amount.toLocaleString()}.00</div>
+            <div class="container">
+                <img src="https://res.cloudinary.com/dwzsqumf6/image/upload/v1765854323/logo_transparent_ec9ge1.png" alt="ClaireAI" class="logo">
+                
+                <div class="title">Invoice from ClaireAI</div>
+                <div class="invoice-num">Invoice #${invoice.id}</div> 
+                <div class="client-name">For: ${firmName}</div>
+                <div class="amount">$${invoice.amount.toLocaleString()}.00</div>
+                
+                <a href="${paymentUrl}" class="btn-primary">Pay Invoice</a>
+                
+                <div class="footer">Due: Upon Receipt</div>
+            </div>
             
-            <a href="${paymentUrl}" class="btn-primary">Pay Invoice</a>
-            
-            <div class="footer">Due: Upon Receipt</div>
+            <div style="text-align: center; color: #999; font-size: 11px; margin-top: 20px;">
+                © ${new Date().getFullYear()} ClaireAI LLC. All rights reserved.
+            </div>
         </div>
     </body>
     </html>
