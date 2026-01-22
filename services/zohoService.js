@@ -137,19 +137,46 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPa
             .title { color: #666; font-size: 13px; margin-bottom: 8px; font-weight: 400; }
             .invoice-num { font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px; }
             .client-name { color: #666; font-size: 14px; margin-bottom: 25px; }
-            .amount { font-size: 38px; font-weight: 700; color: #000; margin-bottom: 30px; letter-spacing: -0.5px; }
-            .btn-primary { 
-                background-color: #0070e0; /* Zoho/Stripe Blue */
-                color: #ffffff; 
-                padding: 12px 40px; 
-                text-decoration: none; 
-                border-radius: 4px; 
-                font-weight: 600; 
-                display: inline-block; 
-                font-size: 15px; 
-                margin-bottom: 30px; 
+        <style>
+            body { font-family: Helvetica, Arial, sans-serif; background-color: #ffffff; padding: 0; margin: 0; }
+            .container {
+                max-width: 500px;
+                margin: 40px auto;
+                padding: 40px;
+                background: #111111; /* Professional Black */
+                border: 1px solid #222222;
+                border-radius: 16px;
+                text-align: center;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                color: #ffffff;
             }
-            .footer { color: #999; font-size: 12px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+            .logo { 
+                max-width: 150px; 
+                margin-bottom: 30px;
+                background: #ffffff; 
+                padding: 12px 20px;
+                border-radius: 8px;
+                display: inline-block;
+            }
+            .title { font-size: 13px; color: #888888; margin-bottom: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+            .invoice-num { font-size: 24px; color: #ffffff; font-weight: 600; margin-bottom: 5px; }
+            .client-name { color: #cccccc; font-size: 14px; margin-bottom: 40px; }
+            .amount { font-size: 56px; color: #ffffff; font-weight: 700; margin-bottom: 40px; letter-spacing: -1.5px; }
+            
+            .btn-primary { 
+                background-color: #0f4c3a; 
+                color: white; 
+                padding: 16px 40px; 
+                text-decoration: none; 
+                border-radius: 50px; 
+                font-weight: bold; 
+                display: inline-block;
+                font-size: 16px;
+                box-shadow: 0 4px 15px rgba(15, 76, 58, 0.4);
+            }
+            .btn-primary:hover { background-color: #1a5f4a; }
+            
+            .footer { color: #555555; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #222; }
             .intro { text-align: left; color: #333; font-size: 15px; margin-bottom: 30px; line-height: 1.6; max-width: 500px; margin-left: auto; margin-right: auto; }
         </style>
     </head>
