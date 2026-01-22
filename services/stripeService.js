@@ -1,4 +1,6 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// Initialize Stripe safely - use a dummy key if missing to prevent crash on require
+const safeKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_cIaireAI_integration';
+const stripe = require('stripe')(safeKey);
 
 /**
  * Creates a Stripe Checkout Session for the setup fee.
