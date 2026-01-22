@@ -227,7 +227,7 @@ async function generateInvoicePDF(invoiceData, firmName, paymentUrl) {
 
         // Logo (Left)
         if (logo) {
-            doc.image(logo, 50, topContentY - 20, { height: 65 });
+            doc.image(logo, 50, topContentY - 30, { height: 85 });
         } else {
             doc.fillColor(BRAND_GREEN).font(FONTS.BOLD).fontSize(22).text('ClaireAI', 50, topContentY);
         }
@@ -296,7 +296,13 @@ async function generateInvoicePDF(invoiceData, firmName, paymentUrl) {
         doc.fillColor(TEXT_DARK).font(FONTS.REGULAR).fontSize(10);
         doc.text('1', 65, rowY);
 
-        doc.font(FONTS.BOLD).text('Standard AI Receptionist Setup', 100, rowY);
+        // Determine Plan Name based on Amount
+        let planName = 'Standard AI Receptionist Setup';
+        if (invoiceData.amount === 650) planName = 'Starter Plan Subscription';
+        else if (invoiceData.amount === 1250) planName = 'Growth Plan Subscription';
+        else if (invoiceData.amount === 3000) planName = 'Enterprise Plan Subscription';
+
+        doc.font(FONTS.BOLD).text(planName, 100, rowY);
         doc.font(FONTS.REGULAR).fontSize(9).fillColor(TEXT_GRAY)
             .text(`Charges for this duration (${new Date().toLocaleDateString()} to ${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()})`, 100, rowY + 15, { width: 300 });
 
