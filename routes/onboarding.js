@@ -30,21 +30,31 @@ async function processOnboarding(dna) {
 
     // 4. Document Factory
     console.log('Generating Invoice with Logo & Payment Link...');
-    const invoicePdfPath = await generateInvoicePDF(invoice, dna.firm_name, paymentUrl);
-    // const contractPdfPath = await generateContract(dna.firm_name, dna.agent_archetype, paymentUrl); // Disabled per request
+    let invoicePdfPath;
+    try {
+        invoicePdfPath = await generateInvoicePDF(invoice, dna.firm_name, paymentUrl);
+    } catch (pdfError) {
+        console.error('[CRITICAL] PDF Generation Failed:', pdfError.message);
+        throw new Error(`PDF Generation Failed: ${pdfError.message}`);
+    }
 
     // 5. Communications
     // A. Send the Bill first
-    await sendInvoiceEmail(dna.id || 'DEMO', dna.client_email, invoice, dna.firm_name, invoicePdfPath, paymentUrl);
-
-    // B. Send the Warm Welcome - DISABLED
-    // await sendWelcomePacket(dna.id || 'DEMO', dna.client_email, dna.firm_name, dna.agent_archetype, contractPdfPath, paymentUrl);
+    try {
+        await sendInvoiceEmail(dna.id || 'DEMO', dna.client_email, invoice, dna.firm_name, invoicePdfPath, paymentUrl);
+    } catch (emailError) {
+        console.error('[CRITICAL] Email Sending Failed:', emailError.message);
+        // We don't throw here to allow response to return partial success if needed, 
+        // but for now let's expose it.
+        throw new Error(`Zoho Email Failed: ${emailError.message}`);
+    }
 
     return {
         message: 'Professional Onboarding initiated',
         provisioning_id: provisionResult.id || 'mock-id',
         invoice_id: invoice.id,
-        payment_url: paymentUrl
+        payment_url: paymentUrl,
+        debug_pdf_path: invoicePdfPath
     };
 }
 
