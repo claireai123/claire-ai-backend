@@ -261,4 +261,42 @@ async function sendWelcomePacket(dealId, toEmail, firmName, agentRole, attachmen
     }
 }
 
-module.exports = { sendProvisioningUpdate, sendInvoiceEmail, sendWelcomePacket };
+/**
+ * Deletes a Deal by ID.
+ */
+async function deleteDeal(dealId) {
+    const token = await getZohoAccessToken();
+    if (!token) return;
+
+    try {
+        const url = `https://www.zohoapis.com/crm/v2/Deals/${dealId}`;
+        const response = await axios.delete(url, {
+            headers: { Authorization: `Zoho-oauthtoken ${token}` }
+        });
+        console.log(`[Zoho] Deleted Deal ${dealId}:`, response.data.data[0].status);
+        return response.data;
+    } catch (error) {
+        console.error(`[Zoho] Failed to delete Deal ${dealId}:`, error.message);
+    }
+}
+
+/**
+ * Lists recent Deals (for cleanup).
+ */
+async function listRecentDeals() {
+    const token = await getZohoAccessToken();
+    if (!token) return [];
+
+    try {
+        const url = `https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=1&per_page=50`;
+        const response = await axios.get(url, {
+            headers: { Authorization: `Zoho-oauthtoken ${token}` }
+        });
+        return response.data.data || [];
+    } catch (error) {
+        console.error('[Zoho] Failed to list deals:', error.message);
+        return [];
+    }
+}
+
+module.exports = { sendProvisioningUpdate, sendInvoiceEmail, sendWelcomePacket, listRecentDeals, deleteDeal };

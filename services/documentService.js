@@ -206,12 +206,17 @@ async function generateInvoicePDF(invoiceData, firmName, paymentUrl) {
         }
 
         // --- HELPER: FOOTER GRAPHIC ---
+        // --- HELPER: FOOTER GRAPHIC ---
         function drawFooter() {
             doc.save();
             const bottomY = doc.page.height - 100;
             doc.path(`M 0 ${doc.page.height} L 600 ${doc.page.height} L 600 ${bottomY} C 400 ${bottomY - 40} 200 ${bottomY + 40} 0 ${bottomY} Z`)
                 .fillColor(BRAND_GREEN)
                 .fill();
+
+            // Institutional Footer Text
+            doc.fontSize(8).fillColor('#ffffff').text('Claire AI LLC  |  4410 NE 53rd St, Boca Raton, FL 33431', 50, doc.page.height - 30, { align: 'center', width: 500 });
+
             doc.restore();
         }
 
@@ -222,7 +227,7 @@ async function generateInvoicePDF(invoiceData, firmName, paymentUrl) {
 
         // Logo (Left)
         if (logo) {
-            doc.image(logo, 50, topContentY - 20, { height: 45 });
+            doc.image(logo, 50, topContentY - 20, { height: 65 });
         } else {
             doc.fillColor(BRAND_GREEN).font(FONTS.BOLD).fontSize(22).text('ClaireAI', 50, topContentY);
         }
@@ -250,9 +255,11 @@ async function generateInvoicePDF(invoiceData, firmName, paymentUrl) {
         const addressY = topContentY + 80;
 
         // From
-        doc.fontSize(10).font(FONTS.BOLD).fillColor(TEXT_DARK).text('Claire AI', 50, addressY);
-        doc.font(FONTS.REGULAR).fillColor(TEXT_GRAY).text('Florida, USA', 50, addressY + 15);
-        doc.text('billing@theclaireai.com', 50, addressY + 30);
+        // From
+        doc.fontSize(10).font(FONTS.BOLD).fillColor(TEXT_DARK).text('Claire AI LLC', 50, addressY);
+        doc.font(FONTS.REGULAR).fillColor(TEXT_GRAY).text('4410 NE 53rd St', 50, addressY + 15);
+        doc.text('Boca Raton, FL 33431', 50, addressY + 30);
+        doc.text('billing@theclaireai.com', 50, addressY + 45);
 
         // Bill To
         doc.moveDown(2);
