@@ -87,34 +87,6 @@ router.post('/webhook', async (req, res) => {
     }
 });
 
-// 2. Intake Form (Direct Demo Trigger)
-router.post('/intake', async (req, res) => {
-    try {
-        console.log('--- Client Intake Submitted (Demo) ---');
-        const intakeData = req.body;
-        console.log('Details:', intakeData);
-
-        // Map Form Data -> DNA
-        const dna = {
-            id: 'DEMO-' + Date.now(), // Fake ID for demo
-            firm_name: intakeData.firmName || 'Demo Firm',
-            practice_area: intakeData.practiceDetails || 'General Practice',
-            transfer_number: '+15550009999', // Default
-            agent_archetype: 'Gatekeeper', // Default for now
-            client_email: intakeData.email
-        };
-
-        if (!dna.client_email) {
-            throw new Error('Email is required for the demo');
-        }
-
-        const result = await processOnboarding(dna);
-        res.status(200).json(result);
-
-    } catch (error) {
-        console.error('Intake Processing Error:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
+// [INTAKE ROUTE REMOVED PER USER REQUEST]
 
 module.exports = router;
