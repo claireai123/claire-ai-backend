@@ -204,7 +204,8 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPa
         return response.data;
     } catch (error) {
         console.error('Zoho Email Error:', error.response ? error.response.data : error.message);
-        return null;
+        // CRITICAL FIX: Throw the error so the main route knows it failed!
+        throw error;
     }
 }
 
