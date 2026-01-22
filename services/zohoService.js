@@ -138,46 +138,42 @@ async function sendInvoiceEmail(dealId, toEmail, invoice, firmName, attachmentPa
             .invoice-num { font-size: 18px; font-weight: 700; color: #000; margin-bottom: 4px; }
             .client-name { color: #666; font-size: 14px; margin-bottom: 25px; }
         <style>
-            body { font-family: Helvetica, Arial, sans-serif; background-color: #ffffff; padding: 0; margin: 0; }
+            body { font-family: Helvetica, Arial, sans-serif; background-color: #f9f9f9; padding: 0; margin: 0; }
             .container {
                 max-width: 500px;
                 margin: 40px auto;
                 padding: 40px;
-                background: #111111; /* Professional Black */
-                border: 1px solid #222222;
-                border-radius: 16px;
+                background: #ffffff; /* CLEAN WHITE CARD */
+                border: 1px solid #e0e0e0;
+                border-radius: 12px;
                 text-align: center;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-                color: #ffffff;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                color: #333333;
             }
             .logo { 
-                max-width: 150px; 
+                max-width: 140px; 
                 margin-bottom: 30px;
-                background: #ffffff; 
-                padding: 12px 20px;
-                border-radius: 8px;
-                display: inline-block;
             }
-            .title { font-size: 13px; color: #888888; margin-bottom: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
-            .invoice-num { font-size: 24px; color: #ffffff; font-weight: 600; margin-bottom: 5px; }
-            .client-name { color: #cccccc; font-size: 14px; margin-bottom: 40px; }
-            .amount { font-size: 56px; color: #ffffff; font-weight: 700; margin-bottom: 40px; letter-spacing: -1.5px; }
+            .title { font-size: 13px; color: #64748b; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+            .invoice-num { font-size: 24px; color: #1e293b; font-weight: 700; margin-bottom: 5px; }
+            .client-name { color: #64748b; font-size: 14px; margin-bottom: 35px; }
+            .amount { font-size: 56px; color: #0f4c3a; font-weight: 700; margin-bottom: 40px; letter-spacing: -2px; }
             
             .btn-primary { 
                 background-color: #0f4c3a; 
                 color: white; 
-                padding: 16px 40px; 
+                padding: 16px 48px; 
                 text-decoration: none; 
-                border-radius: 50px; 
-                font-weight: bold; 
+                border-radius: 8px; 
+                font-weight: 600; 
                 display: inline-block;
                 font-size: 16px;
-                box-shadow: 0 4px 15px rgba(15, 76, 58, 0.4);
+                box-shadow: 0 4px 6px rgba(15, 76, 58, 0.2);
             }
-            .btn-primary:hover { background-color: #1a5f4a; }
+            .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(15, 76, 58, 0.3); }
             
-            .footer { color: #555555; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #222; }
-            .intro { text-align: left; color: #333; font-size: 15px; margin-bottom: 30px; line-height: 1.6; max-width: 500px; margin-left: auto; margin-right: auto; }
+            .footer { color: #94a3b8; font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9; }
+            .intro { text-align: left; color: #334155; font-size: 15px; margin-bottom: 30px; line-height: 1.6; max-width: 500px; margin-left: auto; margin-right: auto; }
         </style>
     </head>
     <body>
